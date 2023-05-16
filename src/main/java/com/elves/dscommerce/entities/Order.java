@@ -3,6 +3,9 @@ package com.elves.dscommerce.entities;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.elves.dscommerce.entities.User;
 
 @Entity
@@ -21,6 +24,9 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
+
+    @OneToMany(mappedBy = "id.order")
+    private Set<OrderItem> items = new HashSet<>();
 
     public  Order (){
 
