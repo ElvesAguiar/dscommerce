@@ -3,6 +3,7 @@ package com.elves.dscommerce.services;
 import com.elves.dscommerce.dto.ProductDTO;
 import com.elves.dscommerce.entities.Product;
 import com.elves.dscommerce.repositories.ProductRepository;
+import com.elves.dscommerce.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,9 +18,12 @@ public class ProductService {
 
     @Autowired
     private ProductRepository repository;
+
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id){
-        return new ProductDTO(repository.findById(id).get());
+
+
+        return new ProductDTO(repository.findById(id).orElseThrow(()->new ResourceNotFoundException("Recurso não encontrado!")));
     }
 
     @Transactional(readOnly = true)
