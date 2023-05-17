@@ -28,4 +28,20 @@ public class ProductService {
 
         return result.map(x -> new ProductDTO(x));
     }
+
+    @Transactional
+    public ProductDTO inset(ProductDTO dto){
+
+        Product product = new Product();
+
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setImgUrl(dto.getImgUrl());
+        product.setPrice(dto.getPrice());
+
+        product = repository.save(product);
+
+        return new ProductDTO(product);
+
+    }
 }
