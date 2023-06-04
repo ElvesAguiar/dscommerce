@@ -104,6 +104,9 @@ public class User implements UserDetails {
         }
         return false;
     }
+    public Set<Role> getRoles() {
+        return roles;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
