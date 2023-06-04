@@ -1,10 +1,8 @@
 package com.elves.dscommerce.services;
 
 import com.elves.dscommerce.dto.OrderDTO;
-import com.elves.dscommerce.entities.Order;
-import com.elves.dscommerce.entities.OrderItem;
-import com.elves.dscommerce.entities.OrderStatus;
-import com.elves.dscommerce.entities.Product;
+import com.elves.dscommerce.dto.OrderItemDTO;
+import com.elves.dscommerce.entities.*;
 import com.elves.dscommerce.repositories.OrderItemRepository;
 import com.elves.dscommerce.repositories.OrderRepository;
 import com.elves.dscommerce.repositories.ProductRepository;
@@ -22,44 +20,45 @@ public class OrderService {
     private OrderRepository repository;
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private OrderItemRepository orderItemRepository;
-    @Autowired
     private AuthService authService;
 
     @Transactional(readOnly = true)
     public OrderDTO findById(Long id) {
-        Order order = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado!"));
-        authService.validateSelfForAdmin(order.getClient().getId());
-
+        Order order = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Recurso não encontrado"));
+        authService.validateSelfOrAdmin(order.getClient().getId());
         return new OrderDTO(order);
-
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public OrderDTO insert(OrderDTO dto) {
+
         Order order = new Order();
+
         order.setMoment(Instant.now());
         order.setStatus(OrderStatus.WAITING_PAYMENT);
 
-        order.setClient(userService.authenticated());
+        User user = userService.authenticated();
+        order.setClient(user);
 
-        dto.getItems().forEach(x -> {
-            Product product = productRepository.getReferenceById(x.getProductId());
-            OrderItem item = new OrderItem(order, product, x.getQuantity(), product.getPrice());
+        for (OrderItemDTO itemDto : dto.getItems()) {
+            Product product = productRepository.getReferenceById(itemDto.getProductId());
+            OrderItem item = new OrderItem(order, product, itemDto.getQuantity(), product.getPrice());
             order.getItems().add(item);
-        });
+        }
 
         repository.save(order);
         orderItemRepository.saveAll(order.getItems());
+
         return new OrderDTO(order);
     }
-
-
 }
