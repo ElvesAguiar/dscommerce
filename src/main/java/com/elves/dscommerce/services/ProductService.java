@@ -1,7 +1,9 @@
 package com.elves.dscommerce.services;
 
+import com.elves.dscommerce.dto.CategoryDTO;
 import com.elves.dscommerce.dto.ProductDTO;
 import com.elves.dscommerce.dto.ProductMinDTO;
+import com.elves.dscommerce.entities.Category;
 import com.elves.dscommerce.entities.Product;
 import com.elves.dscommerce.repositories.ProductRepository;
 import com.elves.dscommerce.services.exceptions.DatabaseException;
@@ -32,7 +34,7 @@ public class ProductService {
     public Page<ProductMinDTO> findAll(String name, Pageable pageable){
         Page<Product> result = repository.searchByName(name, pageable);
 
-        return result.map(x -> new ProductMinDTO(x));
+        return result.map(ProductMinDTO::new);
     }
 
     @Transactional
@@ -76,6 +78,13 @@ public class ProductService {
         entity.setDescription(dto.getDescription());
         entity.setImgUrl(dto.getImgUrl());
         entity.setPrice(dto.getPrice());
+
+        entity.getCategories().clear();
+        dto.getCategories().forEach(x -> {
+            Category cat = new Category();
+            cat.setId(x.getId());
+            entity.getCategories().add(cat);
+        });
     }
 
 
