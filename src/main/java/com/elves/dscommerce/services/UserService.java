@@ -6,16 +6,21 @@ import com.elves.dscommerce.projections.UserDetailsProjection;
 import com.elves.dscommerce.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class UserService implements org.springframework.security.core.userdetails.UserDetailsService {
+@Service
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository repository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         List<UserDetailsProjection> result = repository.searchUserAndRolesByEmail(username);
         if (result.size() == 0) {
             throw new UsernameNotFoundException("Email not found");
@@ -27,6 +32,7 @@ public class UserService implements org.springframework.security.core.userdetail
         for (UserDetailsProjection projection : result) {
             user.addRole(new Role(projection.getRoleId(), projection.getAuthority()));
         }
+
         return user;
     }
 }
