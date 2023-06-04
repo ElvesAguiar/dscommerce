@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.*;
 
+
 @Entity
 @Table(name = "tb_user")
 public class User implements UserDetails {
@@ -20,6 +21,7 @@ public class User implements UserDetails {
     private String phone;
     private LocalDate birthDate;
     private String password;
+
 
     @OneToMany(mappedBy = "client")
     private List<Order> orders = new ArrayList<>();
@@ -115,7 +117,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return getEmail();
     }
 
     @Override

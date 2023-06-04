@@ -43,7 +43,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderDTO inset(OrderDTO dto) {
+    public OrderDTO insert(OrderDTO dto) {
         Order order = new Order();
         order.setMoment(Instant.now());
         order.setStatus(OrderStatus.WAITING_PAYMENT);
