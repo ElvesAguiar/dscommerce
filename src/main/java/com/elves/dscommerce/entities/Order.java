@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.elves.dscommerce.entities.User;
-
 @Entity
 @Table(name = "tb_order")
 public class Order {
@@ -80,7 +78,6 @@ public class Order {
     public void setPayment(Payment payment) {
         this.payment = payment;
     }
-
 
     public Set<OrderItem> getItems() {
         return items;

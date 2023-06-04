@@ -1,7 +1,7 @@
 package com.elves.dscommerce.services.exceptions;
 
-public class ForbiddenException extends RuntimeException{
-    public ForbiddenException(String msg){
+public class ForbiddenException extends RuntimeException {
+    public ForbiddenException(String msg) {
 
         super(msg);
     }

@@ -1,7 +1,6 @@
 package com.elves.dscommerce.dto;
 
 import com.elves.dscommerce.entities.User;
-import jakarta.persistence.Column;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,9 +16,10 @@ public class UserDTO {
 
     private List<String> roles = new ArrayList<>();
 
-    public UserDTO(){
+    public UserDTO() {
 
     }
+
     public UserDTO(User entity) {
         id = entity.getId();
         name = entity.getName();
@@ -28,6 +28,7 @@ public class UserDTO {
         birthDate = entity.getBirthDate();
         entity.getAuthorities().forEach(x -> roles.add(x.getAuthority()));
     }
+
     public Long getId() {
         return id;
     }

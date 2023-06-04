@@ -1,8 +1,8 @@
 package com.elves.dscommerce.dto;
 
-import java.time.Instant;
-
 import com.elves.dscommerce.entities.Payment;
+
+import java.time.Instant;
 
 public class PaymentDTO {
 

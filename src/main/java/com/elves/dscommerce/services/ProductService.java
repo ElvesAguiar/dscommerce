@@ -1,6 +1,5 @@
 package com.elves.dscommerce.services;
 
-import com.elves.dscommerce.dto.CategoryDTO;
 import com.elves.dscommerce.dto.ProductDTO;
 import com.elves.dscommerce.dto.ProductMinDTO;
 import com.elves.dscommerce.entities.Category;
@@ -24,21 +23,21 @@ public class ProductService {
     private ProductRepository repository;
 
     @Transactional(readOnly = true)
-    public ProductDTO findById(Long id){
+    public ProductDTO findById(Long id) {
 
 
-        return new ProductDTO(repository.findById(id).orElseThrow(()->new ResourceNotFoundException("Recurso não encontrado!")));
+        return new ProductDTO(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado!")));
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductMinDTO> findAll(String name, Pageable pageable){
+    public Page<ProductMinDTO> findAll(String name, Pageable pageable) {
         Page<Product> result = repository.searchByName(name, pageable);
 
         return result.map(ProductMinDTO::new);
     }
 
     @Transactional
-    public ProductDTO inset(ProductDTO dto){
+    public ProductDTO inset(ProductDTO dto) {
 
         Product entity = new Product();
         copyDtoToEntity(dto, entity);
@@ -49,25 +48,25 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDTO update(Long id, ProductDTO dto){
+    public ProductDTO update(Long id, ProductDTO dto) {
 
-        try{
+        try {
             Product entity = repository.getReferenceById(id);
             copyDtoToEntity(dto, entity);
             entity = repository.save(entity);
 
             return new ProductDTO(entity);
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado!");
         }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
-    public void delete(Long id){
+    public void delete(Long id) {
         try {
             repository.deleteById(id);
-        }catch (DataIntegrityViolationException e){
-            throw  new DatabaseException("Falha de Integridade referencial!");
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Falha de Integridade referencial!");
         }
 
     }
