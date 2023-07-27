@@ -56,7 +56,7 @@ public class ProductService {
             entity = repository.save(entity);
 
             return new ProductDTO(entity);
-        } catch (EntityNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado!");
         }
     }
