@@ -67,6 +67,8 @@ public class ProductServiceTests {
         Mockito.when(repository.findById(nonExistingProductId)).thenReturn(Optional.empty());
         Mockito.when(repository.searchByName(productName, pageable)).thenReturn(page);
         Mockito.when(repository.save(ArgumentMatchers.any())).thenReturn(product);
+        Mockito.when(repository.getReferenceById(existingProductId)).thenReturn(product);
+        Mockito.when(repository.getReferenceById(nonExistingProductId)).thenThrow(ResourceNotFoundException.class);
 
 
     }
@@ -109,6 +111,28 @@ public class ProductServiceTests {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result.getName(), product.getName());
+
+    }
+
+    @Test
+    public void updateShouldReturnProductDTOWhenIdExists(){
+        ProductService serviceSpy =Mockito.spy(service);
+        ProductDTO result = serviceSpy.update(existingProductId,new ProductDTO(product));
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getName(), product.getName());
+
+    }
+
+    @Test
+    public void updateShouldReturnResourceNotFoundExceptionWhenIdExists(){
+        ProductService serviceSpy =Mockito.spy(service);
+
+        Assertions.assertThrows(ResourceNotFoundException.class,()->{
+            ProductDTO result = serviceSpy.update(nonExistingProductId,new ProductDTO(product));
+
+        });
+
 
     }
 
