@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.provider.Arguments;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -64,6 +66,8 @@ public class ProductServiceTests {
         Mockito.when(repository.findById(existingProductId)).thenReturn(Optional.of(product));
         Mockito.when(repository.findById(nonExistingProductId)).thenReturn(Optional.empty());
         Mockito.when(repository.searchByName(productName, pageable)).thenReturn(page);
+        Mockito.when(repository.save(ArgumentMatchers.any())).thenReturn(product);
+
 
     }
 
@@ -94,6 +98,17 @@ public class ProductServiceTests {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result.get().toList().get(0).getName(),product.getName());
         Assertions.assertEquals(result.stream().toList().get(1).getName(),"PS5-Plus");
+
+    }
+
+    @Test
+    public void insertShouldReturnProductDTO(){
+        ProductService serviceSpy =Mockito.spy(service);
+        ProductDTO result = serviceSpy.inset(new ProductDTO(product));
+
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getName(), product.getName());
 
     }
 
