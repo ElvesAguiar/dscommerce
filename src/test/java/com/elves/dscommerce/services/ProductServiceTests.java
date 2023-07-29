@@ -66,7 +66,7 @@ public class ProductServiceTests {
 
         Mockito.when(repository.findById(existingProductId)).thenReturn(Optional.of(product));
         Mockito.when(repository.findById(nonExistingProductId)).thenReturn(Optional.empty());
-        Mockito.when(repository.searchByName(productName, pageable)).thenReturn(page);
+        Mockito.when(repository.searchByName(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(page);
         Mockito.when(repository.save(ArgumentMatchers.any())).thenReturn(product);
         Mockito.when(repository.getReferenceById(existingProductId)).thenReturn(product);
         Mockito.when(repository.getReferenceById(nonExistingProductId)).thenThrow(ResourceNotFoundException.class);
