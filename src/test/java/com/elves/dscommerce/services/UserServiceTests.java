@@ -1,5 +1,6 @@
 package com.elves.dscommerce.services;
 
+import com.elves.dscommerce.dto.UserDTO;
 import com.elves.dscommerce.entities.User;
 import com.elves.dscommerce.projections.UserDetailsProjection;
 import com.elves.dscommerce.repositories.UserRepository;
@@ -92,6 +93,28 @@ public class UserServiceTests {
         Assertions.assertThrows(UsernameNotFoundException.class, () -> {
             service.authenticated();
         });
+    }
+
+    @Test
+    public void getMeShouldReturnUserDTOWhenUserAuthenticated() {
+        UserService userServiceSpy = Mockito.spy(service);
+        Mockito.doReturn(user).when(userServiceSpy).authenticated();
+
+        UserDTO result = userServiceSpy.getMe();
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getEmail(), existingUserName);
+    }
+
+    @Test
+    public void getMeShouldReturnUsernameNotFoundExceptionWhenUserIsNotAuthenticated() {
+        UserService userServiceSpy = Mockito.spy(service);
+
+        Mockito.doThrow(UsernameNotFoundException.class).when(userServiceSpy).authenticated();
+
+        Assertions.assertThrows(UsernameNotFoundException.class, () -> {
+            UserDTO result = userServiceSpy.getMe();
+        });
+
     }
 
 }
