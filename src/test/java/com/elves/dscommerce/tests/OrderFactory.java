@@ -6,16 +6,20 @@ import java.time.Instant;
 
 public class OrderFactory {
 
-    public static Order createOrder() {
+    public static Order createOrder(User user) {
         Category category = CategoryFactory.createCategory();
         Order order = new Order();
         order.setId(1L);
         order.setMoment(Instant.now());
         order.setPayment(null);
         order.setStatus(OrderStatus.WAITING_PAYMENT);
-        User user = new User(1L,"ana","ana@gmail.com",null,null,"123456");
-
         order.setClient(user);
+
+        Product product = ProductFactory.createProduct();
+        OrderItem orderItem = new OrderItem(order,product,2,10.0);
+        order.getItems().add(orderItem);
+
+
         return order;
     }
 
