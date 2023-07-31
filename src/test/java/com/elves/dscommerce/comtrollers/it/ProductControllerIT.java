@@ -1,5 +1,10 @@
 package com.elves.dscommerce.comtrollers.it;
 
+import com.elves.dscommerce.dto.CategoryDTO;
+import com.elves.dscommerce.dto.ProductDTO;
+import com.elves.dscommerce.entities.Product;
+import com.elves.dscommerce.tests.utils.TokenUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,11 +28,49 @@ public class ProductControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
     private String productName;
 
+    private String clientUserName,clientPassword,adminUserName,adminPassword;
+    private String adminToken,clientToken,invalidToken;
+
+    private Product product;
+    private ProductDTO dto;
+
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+        clientUserName="maria@gmail.com";
+        clientPassword="123456";
+
+        adminUserName="alex@gmail.com";
+        adminPassword="123456";
+
         productName = "mac";
+
+        adminToken=tokenUtil.obtainAccessToken(mockMvc,adminUserName,adminPassword);
+        clientToken=tokenUtil.obtainAccessToken(mockMvc,clientUserName,clientPassword);
+        invalidToken=adminToken+"xpto";//invalid
+
+         product =
+                new Product(null, "Ps5",
+                        "Lorem ipsum, dolor sit amet consectetur " +
+                        "adipisicing elit.Qui ad, adipisci illum ipsam velit et odit eaque reprehenderit" +
+                        " ex maxime delectus dolore labore, quisquam quae tempora natus esse" +
+                        " aliquam veniam doloremque quam minima culpa alias maiores commodi." +
+                        " Perferendis enim",
+                        1000.0,
+                        "https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg"
+
+                );
+         dto=new ProductDTO(product);
+        dto.getCategories().add(new CategoryDTO(2L, null));
+        dto.getCategories().add(new CategoryDTO(3L, null));
 
 
     }
@@ -48,6 +92,8 @@ public class ProductControllerIT {
 
     @Test
     public void findAllShouldReturnPageWhenNameParamIsEmpty() throws Exception {
+
+
         ResultActions result = mockMvc
                 .perform(get("/products")
                         .accept(MediaType.APPLICATION_JSON));
@@ -61,7 +107,147 @@ public class ProductControllerIT {
                        "/dscatalog-resources/master/backend/img/1-big.jpg"));
     }
 
-//    @Test
-//    public void insertShouldReturnProductWhen
+    @Test
+    public void insertShouldReturnProductDTOCreatedWhenValidDataAndUserAdmin() throws Exception {
+
+
+
+        String jsonBody = objectMapper.writeValueAsString(dto);
+
+        ResultActions result = mockMvc
+                .perform(post("/products").header("Authorization","Bearer "+adminToken).content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+
+        result.andExpect(status().isCreated());
+        result.andExpect(jsonPath("$.id").value(26));
+        result.andExpect(jsonPath("$.name").value("Ps5"));
+        result.andExpect(jsonPath("$.description")
+                .value("Lorem ipsum, dolor sit amet consectetur adipisicing elit.Qui ad, adipisci illum ipsam velit et odit eaque reprehenderit ex maxime delectus dolore labore, quisquam quae tempora natus esse aliquam veniam doloremque quam minima culpa alias maiores commodi. Perferendis enim"));
+
+        result.andExpect(jsonPath("$.price").value(1000.0));
+        result.andExpect(jsonPath("$.imgUrl").value("https://raw.githubusercontent.com/devsuperior" +
+                                                    "/dscatalog-resources/master/backend/img/1-big.jpg"));
+
+        result.andExpect(jsonPath("$.categories[0].id").value(2));
+        result.andExpect(jsonPath("$.categories[1].id").value(3));
+    }
+
+    @Test
+    public void insertShouldReturn422WhenUserAdminAndInvalidDataInNameField() throws Exception {
+
+        dto.setName("PS");
+
+        String jsonBody = objectMapper.writeValueAsString(dto);
+
+        ResultActions result = mockMvc
+                .perform(post("/products").header("Authorization","Bearer "+adminToken).content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+
+        result.andExpect(status().isUnprocessableEntity());
+
+    }
+
+    @Test
+    public void insertShouldReturn422WhenUserAdminAndInvalidDataOnDescriptionField() throws Exception {
+
+        dto.setDescription("");
+
+        String jsonBody = objectMapper.writeValueAsString(dto);
+
+        ResultActions result = mockMvc
+                .perform(post("/products").header("Authorization","Bearer "+adminToken).content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+
+        result.andExpect(status().isUnprocessableEntity());
+
+    }
+
+    @Test
+    public void insertShouldReturn422WhenUserAdminAndPriceIsNegative() throws Exception {
+
+        dto.setPrice(-3999.0);
+
+        String jsonBody = objectMapper.writeValueAsString(dto);
+
+        ResultActions result = mockMvc
+                .perform(post("/products").header("Authorization","Bearer "+adminToken).content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+
+        result.andExpect(status().isUnprocessableEntity());
+
+    }
+
+    @Test
+    public void insertShouldReturn422WhenUserAdminAndPriceIsZero() throws Exception {
+
+        dto.setPrice(0.0);
+
+        String jsonBody = objectMapper.writeValueAsString(dto);
+
+        ResultActions result = mockMvc
+                .perform(post("/products").header("Authorization","Bearer "+adminToken).content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+
+        result.andExpect(status().isUnprocessableEntity());
+
+    }
+    @Test
+    public void insertShouldReturn422WhenUserAdminAndCategoriesIsNull() throws Exception {
+
+        dto.getCategories().clear();
+
+        String jsonBody = objectMapper.writeValueAsString(dto);
+
+        ResultActions result = mockMvc
+                .perform(post("/products").header("Authorization","Bearer "+adminToken).content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+
+        result.andExpect(status().isUnprocessableEntity());
+
+    }
+
+    @Test
+    public void insertShouldReturn403WhenUserClient() throws Exception {
+
+
+        String jsonBody = objectMapper.writeValueAsString(dto);
+
+        ResultActions result = mockMvc
+                .perform(post("/products").header("Authorization","Bearer "+clientToken).content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+
+        result.andExpect(status().isForbidden());
+
+    }
+
+    @Test
+    public void insertShouldReturn401WhenInvalidToken() throws Exception {
+
+
+        String jsonBody = objectMapper.writeValueAsString(dto);
+
+        ResultActions result = mockMvc
+                .perform(post("/products").header("Authorization","Bearer "+invalidToken).content(jsonBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+
+        result.andExpect(status().isUnauthorized());
+
+    }
 
 }
