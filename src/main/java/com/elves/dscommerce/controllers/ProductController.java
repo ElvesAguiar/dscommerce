@@ -39,7 +39,7 @@ public class ProductController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO dto) {
-        dto = service.inset(dto);
+        dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").
                 buildAndExpand(dto.getId()).toUri();
 
