@@ -18,7 +18,9 @@ Antes de permitir que o usuário acesse qualquer recurso da API, é necessário 
 - JPA / Hibernate
 - Maven
 - Banco de dados: H2
-- spring-security-oauth2-authorization-JWT(segurança)
+- spring-security
+- Oauth2
+- JWT token
 - Junit/Mockito(testes)
 - jacoco(cobertura de testes)
 
