@@ -3,9 +3,7 @@
 
 # Sobre o projeto
 Esse Projeto é uma aplicação Web feita em Java Spring/Rest.
-
-A API disponibiliza um catálogo de produtos que podem ser filtrados por nome. Cada produto possui um identificador único (ID) para que o usuário possa selecioná-lo e visualizar seus detalhes. Além disso, os usuários têm a opção de adicionar produtos ao carrinho de compras para fazer um pedido posteriormente. 
-Antes de permitir que o usuário acesse qualquer recurso da API, é necessário verificar se suas credenciais são válidas e autorizar as ações permitidas para o seu perfil de usuário. Essa verificação pode é feita através de métodos de autenticação OAuth2 (com Token JWT).
+A API desenvolvida para suportar um sistema de e-commerce e oferece uma série de recursos essenciais para interações com os produtos e o carrinho de compras. Ela é projetada para ser utilizada por usuários autorizados, após a verificação de suas credenciais e a atribuição de permissões específicas de acordo com o perfil de cada usuário. A autenticação é realizada através do protocolo OAuth2, utilizando Tokens JWT para garantir a segurança das transações.
 
 ## Modelo conceitual
 ![Modelo Conceitual](https://github.com/ElvesAguiar/dscommerce/blob/main/Captura%20de%20tela%202023-06-05%20105505.png)
