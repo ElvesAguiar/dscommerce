@@ -4,9 +4,8 @@
 # Sobre o projeto
 Esse Projeto é uma aplicação Web feita em Java Spring/Rest.
 
-A API pode apresentar um catálogo de produtos, os quais podem ser filtrados pelo nome do produto. A partir
-desse catálogo, o usuário pode selecionar um produto para ver seus detalhes através de um ID. O usuário pode fazer um pedido no carrinho de compras. 
-
+A API disponibiliza um catálogo de produtos que podem ser filtrados por nome. Cada produto possui um identificador único (ID) para que o usuário possa selecioná-lo e visualizar seus detalhes. Além disso, os usuários têm a opção de adicionar produtos ao carrinho de compras para fazer um pedido posteriormente. 
+Antes de permitir que o usuário acesse qualquer recurso da API, é necessário verificar se suas credenciais são válidas e autorizar as ações permitidas para o seu perfil de usuário. Essa verificação pode é feita através de métodos de autenticação OAuth2 (com Token JWT).
 
 ## Modelo conceitual
 ![Modelo Conceitual](https://github.com/ElvesAguiar/dscommerce/blob/main/Captura%20de%20tela%202023-06-05%20105505.png)
@@ -19,6 +18,9 @@ desse catálogo, o usuário pode selecionar um produto para ver seus detalhes at
 - JPA / Hibernate
 - Maven
 - Banco de dados: H2
+- spring-security-oauth2-authorization-JWT(segurança)
+- Junit/Mockito(testes)
+- jacoco(cobertura de testes)
 
 # Como executar o projeto
 
