@@ -1,4 +1,4 @@
-package com.elves.dscommerce.comtrollers.it;
+package com.elves.dscommerce.controllers.it;
 
 import com.elves.dscommerce.tests.utils.TokenUtil;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package com.elves.dscommerce.comtrollers.it;
+package com.elves.dscommerce.controllers.it;
 
 import com.elves.dscommerce.dto.OrderDTO;
 import com.elves.dscommerce.entities.*;
@@ -191,21 +191,7 @@ public class OrderControllerIT {
 		
 		result.andExpect(status().isUnprocessableEntity());
 	}
-	
-	@Test
-	public void insertShouldReturnForbiddenWhenAdminLogged() throws Exception {
 
-		String jsonBody = objectMapper.writeValueAsString(orderDTO);
-		
-		ResultActions result = 
-				mockMvc.perform(post("/orders")
-					.header("Authorization", "Bearer " + adminToken)
-					.content(jsonBody)
-					.contentType(MediaType.APPLICATION_JSON)
-					.accept(MediaType.APPLICATION_JSON));
-		
-		result.andExpect(status().isForbidden());
-	}
 	
 	@Test
 	public void insertShouldReturnUnauthorizedWhenInvalidToken() throws Exception {

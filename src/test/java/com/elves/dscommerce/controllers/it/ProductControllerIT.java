@@ -1,4 +1,4 @@
-package com.elves.dscommerce.comtrollers.it;
+package com.elves.dscommerce.controllers.it;
 
 import com.elves.dscommerce.dto.ProductDTO;
 import com.elves.dscommerce.entities.Category;
@@ -62,7 +62,7 @@ public class ProductControllerIT {
 		invalidToken = adminToken + "xpto"; // Simulates a wrong token
 		
 		Category category = new Category(2L, null);
-		product = new Product(null, "Console PlayStation 5", "Lorem ipsum dolor sit amet, consectetur adipiscing elit", 3999.90, "https://raw.githubusercontent.com/elves/dscatalog-resources/master/backend/img/1-big.jpg");
+		product = new Product(null, "Console PlayStation 5", "Lorem ipsum dolor sit amet, consectetur adipiscing elit", 3999.90, "https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg");
 		product.getCategories().add(category);
 		productDTO = new ProductDTO(product);
 	}
@@ -79,7 +79,7 @@ public class ProductControllerIT {
 		result.andExpect(jsonPath("$.content[0].id").value(1L));
 		result.andExpect(jsonPath("$.content[0].name").value("The Lord of the Rings"));
 		result.andExpect(jsonPath("$.content[0].price").value(90.5));
-		result.andExpect(jsonPath("$.content[0].imgUrl").value("https://raw.githubusercontent.com/elves/dscatalog-resources/master/backend/img/1-big.jpg"));
+		result.andExpect(jsonPath("$.content[0].imgUrl").value("https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg"));
 	}
 	
 	@Test
@@ -93,7 +93,7 @@ public class ProductControllerIT {
 		result.andExpect(jsonPath("$.content[0].id").value(3L));
 		result.andExpect(jsonPath("$.content[0].name").value("Macbook Pro"));
 		result.andExpect(jsonPath("$.content[0].price").value(1250.0));
-		result.andExpect(jsonPath("$.content[0].imgUrl").value("https://raw.githubusercontent.com/elves/dscatalog-resources/master/backend/img/3-big.jpg"));
+		result.andExpect(jsonPath("$.content[0].imgUrl").value("https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/3-big.jpg"));
 	}
 
 	@Test
@@ -139,7 +139,7 @@ public class ProductControllerIT {
 		result.andExpect(jsonPath("$.name").value("Console PlayStation 5"));
 		result.andExpect(jsonPath("$.description").value("Lorem ipsum dolor sit amet, consectetur adipiscing elit"));
 		result.andExpect(jsonPath("$.price").value(3999.90));
-		result.andExpect(jsonPath("$.imgUrl").value("https://raw.githubusercontent.com/elves/dscatalog-resources/master/backend/img/1-big.jpg"));
+		result.andExpect(jsonPath("$.imgUrl").value("https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg"));
 		result.andExpect(jsonPath("$.categories[0].id").value(2L));
 	}
 	
@@ -280,7 +280,7 @@ public class ProductControllerIT {
 		result.andExpect(jsonPath("$.name").value("Console PlayStation 5"));
 		result.andExpect(jsonPath("$.description").value("Lorem ipsum dolor sit amet, consectetur adipiscing elit"));
 		result.andExpect(jsonPath("$.price").value(3999.90));
-		result.andExpect(jsonPath("$.imgUrl").value("https://raw.githubusercontent.com/elves/dscatalog-resources/master/backend/img/1-big.jpg"));
+		result.andExpect(jsonPath("$.imgUrl").value("https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg"));
 		result.andExpect(jsonPath("$.categories[0].id").value(2L));		
 	}
 	
