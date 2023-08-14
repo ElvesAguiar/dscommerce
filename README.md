@@ -15,7 +15,7 @@ A API desenvolvida para suportar um sistema de e-commerce e oferece uma série d
 - Spring Boot
 - JPA / Hibernate
 - Maven
-- Banco de dados: H2
+- Banco de dados: H2-testes /postgresSQL-persistencia de dados
 - spring-security
 - Oauth2
 - JWT token
